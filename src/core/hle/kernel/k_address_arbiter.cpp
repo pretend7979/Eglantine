@@ -323,7 +323,8 @@ Result KAddressArbiter::WaitIfEqual(uint64_t addr, s64 value, s64 timeout, bool 
         bool succeeded{};
         if (is_64_bit) {
             auto& memory = GetCurrentMemory(system.Kernel());
-            succeeded = memory.IsValidVirtualAddressRange(addr, sizeof(s64));
+            succeeded = addr + sizeof(s64) > addr &&
+                        memory.IsValidVirtualAddressRange(addr, sizeof(s64));
             if (succeeded) {
                 user_value = static_cast<s64>(memory.Read64(addr));
             }
