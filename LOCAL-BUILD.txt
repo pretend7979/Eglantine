@@ -1,0 +1,3 @@
+Base commit: d9558f05a2e43f6f23d030d920f70c283cf81b70
+Local AI-assisted changes; not an upstream release.
+See docs/StarFox-local-release.txt and tools/windows/build-local-release.ps1.

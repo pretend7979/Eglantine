@@ -641,6 +641,11 @@ VideoCore::GameDlssReason KeplerCompute::GameDlssBlocker() const {
 }
 
 bool KeplerCompute::EmulatesNativeTensorPrograms() const {
+    // Star Fox needs native matrix shaders even outside the recognized DLSS chain.
+    constexpr u64 StarFoxProgramId = 0x0400E88025B1A000ULL;
+    if (Settings::GetCurrentProgramID() == StarFoxProgramId) {
+        return true;
+    }
     if (dlss_chain.active) {
         return dlss_chain.failure == VideoCore::GameDlssReason::None &&
                GameDlssBlocker() == VideoCore::GameDlssReason::None;

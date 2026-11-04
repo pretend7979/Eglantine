@@ -1,0 +1,58 @@
+Star Fox local Release build
+2026-11-04
+
+Base: Djihads80/Eglantine nx2, d9558f05a2e43f6f23d030d920f70c283cf81b70.
+This is an AI-assisted local modification, not an official upstream release.
+
+The Qt application and command-line frontend share these source fixes:
+- hwopus command 100 client/manager interfaces and mono/stereo Opus task decoding.
+- audsmx PCM output through the normal host audio backend.
+- Native shader instruction fixes for integer conversion, constant loads,
+  gradient sampling, array gathers, shifts, predicates and uniform multiply-add.
+- Native 3D surface atomic ADD/OR and atomic ADD with the old value returned.
+  These fix a compute shader that was repeatedly rejected during Star Fox.
+- Star Fox title 0400E88025B1A000 automatically uses the tested 4 KiB native-window
+  alignment and native matrix shader emulation. No Star Fox environment flags,
+  patched game files, or special launcher are required.
+- The Sirit cstdlib include fix is applied by the dependency manifest, including
+  when dependencies are downloaded into a fresh cache.
+
+Run eglantine.exe directly from the extracted Windows package. Keep its DLLs
+and plugin directories beside it. It uses the usual Eden user data directory.
+The package contains neither games nor console keys/firmware nor user saves.
+The existing C:\eden installation is not modified by this package.
+
+Build on Windows with the MSYS2 CLANG64 compiler and libraries:
+  powershell -File tools/windows/build-local-release.ps1
+
+The script assumes MSYS2 at C:\msys64 (override with -MsysRoot), configures
+CMake Release with the Qt frontend, builds yuzu and yuzu-cmd, then packages
+their Qt plugins and transitive non-system DLLs. Output defaults to
+build/local-release/package. Override -BuildDirectory and -PackageDirectory
+to use other locations. -PackageOnly packages already-built binaries.
+
+Required build packages are described in docs/Deps.md. Use the CLANG64 variants
+(mingw-w64-clang-x86_64-...) for this script: clang, cmake, ninja, Qt6 base/charts/
+svg/tools, boost, fmt, FFmpeg, OpenSSL, lz4, zlib, zstd, opus, glslang and Vulkan
+development libraries, plus git and patch. CMake downloads bundled dependencies.
+This local package uses dynamic libraries; users do not need MSYS2 installed.
+
+Validation and limits:
+- The packaged Qt Release app starts with only Windows on PATH; its runtime
+  libraries are bundled. Star Fox was launched without EDEN_NX2_TENSOR or
+  EDEN_STARFOX_ALIGNMENT_TEST. The user confirmed graphics and audio work.
+- The previous CLI build was visually and audibly checked by the user: gameplay
+  loads, audio works, and the corrected cutscenes look right.
+- Shader regression tests: 206 assertions passed in 20 cases.
+- Expanded capture scan: all 447 shader files translated, including the formerly
+  rejected 3D surface atomic shader. This is not a full-game compatibility
+  guarantee. No game shader binaries are included in the source.
+- The full upstream test target has an existing compile error in
+  global_address_tracking.cpp (old two-argument pass call); focused shader tests
+  were compiled and run separately.
+- Multistream Opus, other sample rates, and a full playthrough remain unverified.
+- Existing guest null-address memory diagnostics remain in the runtime log.
+- This is an optimized Release build, without profile-guided optimization.
+
+The source archive and patch preserve all local changes, including the tests and
+build script. No commits or pull requests have been submitted upstream.
