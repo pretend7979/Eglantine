@@ -24,6 +24,9 @@ public:
         std::scoped_lock lk{mutex};
         if (!is_set) {
             is_set = true;
+#ifdef _WIN32
+            WakeTimedWaiters();
+#endif
             condvar.notify_one();
         }
     }
@@ -57,6 +60,9 @@ public:
     }
 
 private:
+#ifdef _WIN32
+    void WakeTimedWaiters();
+#endif
     alignas(64) std::atomic<bool> is_set{false};
     std::condition_variable condvar;
     std::mutex mutex;

@@ -25,7 +25,7 @@ if (!$PackageOnly) {
         "-DQt6_DIR=$toolchain/lib/cmake/Qt6" `
         -DYUZU_CMD=ON -DYUZU_ROOM=OFF -DYUZU_ROOM_STANDALONE=OFF `
         -DYUZU_TESTS=OFF -DYUZU_USE_BUNDLED_SDL3=ON -DENABLE_UPDATE_CHECKER=OFF `
-        -DUSE_DISCORD_PRESENCE=OFF -DENABLE_LIBUSB=OFF `
+        -DUSE_DISCORD_PRESENCE=OFF -DENABLE_LIBUSB=OFF -DCMAKE_DISABLE_FIND_PACKAGE_libusb=ON `
         -DVulkanHeaders_FORCE_BUNDLED=ON -DVulkanUtilityLibraries_FORCE_BUNDLED=ON `
         -Denet_FORCE_BUNDLED=ON
     if ($LASTEXITCODE) { throw 'CMake configuration failed' }

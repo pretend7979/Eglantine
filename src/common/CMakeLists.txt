@@ -157,7 +157,7 @@ set_source_files_properties(zbic_compression.cpp PROPERTIES
 if(WIN32)
     target_sources(common PRIVATE windows/timer_resolution.cpp
         windows/timer_resolution.h)
-    target_link_libraries(common PRIVATE ntdll)
+    target_link_libraries(common PRIVATE ntdll synchronization)
 endif()
 
 if(NOT WIN32)

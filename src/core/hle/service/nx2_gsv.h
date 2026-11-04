@@ -1797,6 +1797,7 @@ private:
             if (m_stats.last_present != std::chrono::steady_clock::time_point{}) {
                 const long long frame = to_us(entered - m_stats.last_present);
                 m_stats.frame_us += frame;
+                ++m_stats.frame_intervals;
                 m_stats.max_frame_us = (std::max)(m_stats.max_frame_us, frame);
                 m_stats.hitches += frame > 100'000 ? 1 : 0;
             }
@@ -1806,7 +1807,7 @@ private:
                          "nx2:vi2 last 600 presents: frame {} us (max {}, {} over 100 ms), "
                          "blocked on the GPU fence {} us (max {}), composite {} us, vblank "
                          "pacing {} us, {} ran a frame ahead",
-                         m_stats.frame_us / 599, m_stats.max_frame_us, m_stats.hitches,
+                         m_stats.frame_us / m_stats.frame_intervals, m_stats.max_frame_us, m_stats.hitches,
                          m_stats.fence_us / 600, m_stats.max_fence_us, m_stats.composite_us / 600,
                          m_stats.pace_us / 600, m_stats.ran_ahead);
                 m_stats = {.last_present = entered};
@@ -1826,7 +1827,7 @@ private:
     struct PresentStats {
         long long frame_us{}, fence_us{}, composite_us{}, pace_us{}, max_fence_us{};
         long long max_frame_us{}, hitches{};
-        u32 presents{}, ran_ahead{};
+        u32 presents{}, frame_intervals{}, ran_ahead{};
         std::chrono::steady_clock::time_point last_present{};
     } m_stats{};
     u32 m_previous_fence_id{~0U}; // none yet (WaitForFrame ignores ids >= 192)
